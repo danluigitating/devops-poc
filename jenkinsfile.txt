@@ -1,11 +1,15 @@
 node('windows'){
-  stage("Git Checkout"){
-    bat "git clone git@github.com:manulife-ca-sandbox/mu-se-ph-08-tatinda-km-rest.git .";
-    dir('mu-se-ph-08-tatinda-km-rest\\build'){
-    bat "npm install";
-    }
-  }
+  def nodeOS = isUnix()? "unix" : "windows";
 
+  stage("Git Checkout"){
+    println "Stage: Checkout running on ${nodeOS}";
+    
+    if (nodeOS =="windows")
+      println "running commands in windows os";
+    else
+      println "running commands in unix os";
+  }
+  
   stage("Build/Compile"){
     println "Stage: Build/Compile";
     bat "npm build";
@@ -18,7 +22,6 @@ node('windows'){
   stage("Staging/Artifactory"){
     println "Stage: Staging/Artifactory";
   }
-
 
   stage("Code Scans"){
     println "Stage: Code Scans";
@@ -34,6 +37,5 @@ node('windows'){
   
   stage("Deploy"){
     println "Stage: Deploy";
-    bat "cf push";
   }
 }
